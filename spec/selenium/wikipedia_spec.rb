@@ -4,7 +4,6 @@ describe "wikipedia" do
 
   it "should open the main page" do
     @driver.get("http://en.wikipedia.org")
-    debugger
-    true
+    header = @driver.find_element(:xpath, "//h2[contains(., \"Today's featured article\")]")
   end
 end
