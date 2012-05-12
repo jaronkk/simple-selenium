@@ -21,4 +21,14 @@ describe "selenium webdriver examples" do
       selenium.text?("'Hal said, \"Good morning, Dave,\"' recalled Frank.").should be_true
     end
   end
+
+  describe "form manipulation" do
+    it "should search Google" do
+      selenium.get("https://www.google.com")
+      search_field = selenium.find_element(:id, "gbqfq")
+      search_field.send_keys "Test", :return
+      link = selenium.wait_for_element(:link, "Test - Wikipedia, the free encyclopedia")
+      link.attribute(:href).should == "http://en.wikipedia.org/wiki/Test"
+    end
+  end
 end

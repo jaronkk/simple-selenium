@@ -38,6 +38,14 @@ module SeleniumHelper
       end
     end
 
+    def wait_for_element(*args)
+      wait.until { find_element(*args) }
+    end
+
+    def wait
+      @wait ||= Selenium::WebDriver::Wait.new(:timeout => 10) # seconds
+    end
+
     def escape_xpath_text(text)
       if text =~ /"/
         # The only way to effectively allow quotes in xpath text is by using the concat function to join strings together
