@@ -28,15 +28,35 @@ describe "selenium webdriver examples" do
   end
 
   describe "form manipulation" do
-    it "should search Google" do
+    it "should search Google by pressing the enter key" do
       expected_link_title = "Test - Wikipedia, the free encyclopedia"
       selenium.get("https://www.google.com")
       # Google's main search input field has an id of "gbqfq" for now
       search_field = selenium.find_element(:id, "gbqfq")
+      search_field.attribute(:value).should == ""
       # Type "Test", then press the return key
       search_field.send_keys "Test", :return
-      # Since it takes a little while for the search to run, we don't expect our link to appear right away
+      search_field.attribute(:value).should == "Test"
+      # Since it takes a little while for the search to run, we expect that our link is not present immediately
       selenium.element?(:link, expected_link_title).should be_false
+      # Use the wait_for_element method to wait until our link appears
+      link = selenium.wait_for_element(:link, expected_link_title)
+      # Verify that the link goes where we expect
+      link.attribute(:href).should == "http://en.wikipedia.org/wiki/Test"
+    end
+
+    it "should search Google by clicking the search button" do
+      expected_link_title = "Test - Wikipedia, the free encyclopedia"
+      selenium.get("https://www.google.com")
+      # Google's main search input field also has the name of "q", so we can use xpath to find it
+      search_field = selenium.find_element(:xpath, "//input[@name=\"q\"]")
+      # Type "Test", this time passing each letter separately (just as an example of how send_keys works)
+      search_field.send_keys "T", "e", "s", "t"
+      # Since "Test" is a short search with a lot of results, Google should not yet be automatically searching
+      selenium.text?("Press Enter to search.").should be_true
+      # Find the search button then click it
+      search_button = selenium.find_element(:xpath, "//button[@name=\"btnG\"]")
+      search_button.click
       # Use the wait_for_element method to wait until our link appears
       link = selenium.wait_for_element(:link, expected_link_title)
       # Verify that the link goes where we expect
