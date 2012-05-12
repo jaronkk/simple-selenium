@@ -85,6 +85,8 @@ describe "selenium webdriver examples" do
       message.send_keys("Hey John,\nI know I'm your last resort and that you needed $100 even for that heart transplant, but I could only spare $99.\n\nHope this helps,\n-- Nice")
       # Add it to the cart!
       selenium.find_element(:id, "add-to-cart-Email").click
+      # Verify that the gift card has been added.
+      selenium.wait_for_text("$99.00").should be_true
     end
   end
 end
