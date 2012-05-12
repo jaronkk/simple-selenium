@@ -31,10 +31,19 @@ module SeleniumHelper
 
     def text?(text)
       begin
-        @driver.find_element(:xpath, "//*[contains(., \"#{text}\")]")
+        @driver.find_element(:xpath, "//*[contains(., #{escape_xpath_text(text)})]")
         true
       rescue Selenium::WebDriver::Error::NoSuchElementError
         false
+      end
+    end
+
+    def escape_xpath_text(text)
+      if text =~ /"/
+        # The only way to effectively allow quotes in xpath text is by using the concat function to join strings together
+        "concat(\"" + text.gsub(/"/,"\", '\"', \"") + "\")"
+      else
+        "\"#{text}\""
       end
     end
   end
