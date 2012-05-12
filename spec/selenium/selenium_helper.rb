@@ -30,12 +30,14 @@ module SeleniumHelper
     end
 
     def text?(text)
-      begin
-        @driver.find_element(:xpath, "//*[contains(., #{escape_xpath_text(text)})]")
-        true
-      rescue Selenium::WebDriver::Error::NoSuchElementError
-        false
-      end
+      element?(:xpath, "//*[contains(., #{escape_xpath_text(text)})]")
+    end
+
+    def element?(*args)
+      find_element(*args)
+      true
+    rescue Selenium::WebDriver::Error::NoSuchElementError
+      false
     end
 
     def wait_for_element(*args)
