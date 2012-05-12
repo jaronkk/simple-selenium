@@ -37,6 +37,10 @@ module SeleniumHelper
       elements.size > 0
     end
 
+    def wait_for_text(text)
+      wait.until { text?(text) }
+    end
+
     def element?(*args)
       find_element(*args)
       true

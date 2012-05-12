@@ -27,7 +27,7 @@ describe "selenium webdriver examples" do
     end
   end
 
-  describe "form manipulation" do
+  describe "form manipulation on Google" do
     it "should search Google by pressing the enter key" do
       expected_link_title = "Test - Wikipedia, the free encyclopedia"
       selenium.get("https://www.google.com")
@@ -48,7 +48,7 @@ describe "selenium webdriver examples" do
     it "should search Google by clicking the search button" do
       expected_link_title = "Test - Wikipedia, the free encyclopedia"
       selenium.get("https://www.google.com")
-      # Google's main search input field also has the name of "q", so we can use xpath to find it
+      # Google's main search input field also has the name of "q", so we can use XPath to find it
       search_field = selenium.find_element(:xpath, "//input[@name=\"q\"]")
       # Type "Test", this time passing each letter separately (just as an example of how send_keys works)
       search_field.send_keys "T", "e", "s", "t"
@@ -66,6 +66,27 @@ describe "selenium webdriver examples" do
       link.attribute(:href).should == "http://en.wikipedia.org/wiki/Test"
       # Now that the results are on the page, the message telling us how to search should be gone
       selenium.text?("Press Enter to search.").should be_false
+    end
+  end
+
+  describe "Navigating multiple pages" do
+    it "Should add an Amazon gift card to the cart" do
+      selenium.get("http://www.amazon.com")
+      selenium.find_element(:link, "Gift Cards").click
+      selenium.find_element(:link, "E-mail").click
+      # Make sure we're on the right page
+      selenium.text?("Your eGift Card Order is empty.").should be_true
+      # Use a css selector to find the first select button to select the gift card design
+      selenium.find_element(:css, "input.gcSelectButton").click
+      # Set the amount of the gift card, recipient name and email, sender name, and message
+      selenium.find_element(:css, "input[name=amount]").send_keys("99")
+      selenium.find_element(:id, "s-to-Email").send_keys("John Doe")
+      selenium.find_element(:id, "s-email-Email").send_keys("john@example.com")
+      selenium.find_element(:id, "s-from-Email").send_keys("Nice Guy")
+      message = selenium.find_element(:id, "s-message-Email")
+      message.send_keys("Hey John,\nI know I'm your last resort and that you needed $100 even for that heart transplant, but I could only spare $99.\n\nHope this helps,\n-- Nice")
+      # Add it to the cart!
+      selenium.find_element(:id, "add-to-cart-Email").click
     end
   end
 end
