@@ -31,7 +31,10 @@ module SeleniumHelper
     end
 
     def text?(text)
-      element?(:xpath, "//*[contains(., #{escape_xpath_text(text)})]")
+      text_xpath = "//*[text()[contains(., #{escape_xpath_text(text)})]]"
+      elements = find_elements(:xpath, text_xpath)
+      elements = elements.reject{|e| !e.displayed?}
+      elements.size > 0
     end
 
     def element?(*args)
