@@ -52,10 +52,8 @@ describe "selenium webdriver examples" do
       search_field = selenium.find_element(:xpath, "//input[@name=\"q\"]")
       # Type "Test", this time passing each letter separately (just as an example of how send_keys works)
       search_field.send_keys "T", "e", "s", "t"
-      # Wait for a moment for that layout to change now that we started typing
-      sleep(0.5)
       # Since "Test" is a short search with a lot of results, Google should not yet be automatically searching
-      selenium.text?("Press Enter to search.").should be_true
+      selenium.wait_for_text("Press Enter to search.").should be_true
       # Find the search button then click it
       search_button = selenium.find_element(:xpath, "//button[@name=\"btnG\"]")
       search_button.displayed?.should be_true
