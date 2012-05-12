@@ -16,6 +16,7 @@ module SeleniumHelper
   def selenium_quit
     if @selenium_driver
       @selenium_driver.quit
+      @selenium_driver = nil
     end
   end
 
