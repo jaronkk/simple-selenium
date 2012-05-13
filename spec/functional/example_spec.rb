@@ -54,8 +54,8 @@ describe "selenium webdriver examples" do
       search_field.send_keys "T", "e", "s", "t"
       # Since "Test" is a short search with a lot of results, Google should not yet be automatically searching
       selenium.wait_for_text("Press Enter to search.").should be_true
-      # Find the search button then click it
-      search_button = selenium.find_element(:xpath, "//button[@name=\"btnG\"]")
+      # Find the search button then click it.  This time we'll use a CSS selector instead of XPath:
+      search_button = selenium.find_element(:css, "button[name=btnG]")
       search_button.displayed?.should be_true
       search_button.click
       # Use the wait_for_element method to wait until our link appears
@@ -73,7 +73,7 @@ describe "selenium webdriver examples" do
       selenium.find_element(:link, "Gift Cards").click
       selenium.find_element(:link, "E-mail").click
       # Make sure we're on the right page
-      selenium.text?("Your eGift Card Order is empty.").should be_true
+      selenium.wait_for_text("Your eGift Card Order is empty.").should be_true
       # Use a css selector to find the first select button to select the gift card design
       selenium.find_element(:css, "input.gcSelectButton").click
       # Set the amount of the gift card, recipient name and email, sender name, and message
@@ -87,6 +87,15 @@ describe "selenium webdriver examples" do
       selenium.find_element(:id, "add-to-cart-Email").click
       # Verify that the gift card has been added.
       selenium.wait_for_text("$99.00").should be_true
+      # Remove the gift card from the cart by clicking the visible remove links
+      remove_links = selenium.find_elements(:css, ".gcOrderCardRemove")
+      remove_links.each do |link|
+        if link.displayed?
+          link.click
+        end
+      end
+      # Make sure the gift card was removed
+      selenium.wait_for_text("Your eGift Card Order is empty.").should be_true
     end
   end
 end
