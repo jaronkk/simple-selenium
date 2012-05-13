@@ -3,13 +3,13 @@ require "selenium-webdriver"
 module SeleniumHelper
   def selenium
     if @selenium_driver.nil?
-      selenium_start
+      selenium_initialize
     end
 
     @selenium_driver
   end
 
-  def selenium_start
+  def selenium_initialize
     @selenium_driver = SeleniumRSpecWrapper.new
   end
 
@@ -22,11 +22,25 @@ module SeleniumHelper
 
   class SeleniumRSpecWrapper
     def initialize
+      # Lazy load the actual Selenium WebDriver driver
+      @driver = nil
+    end
+
+    def initialize_driver
       @driver = Selenium::WebDriver.for :firefox
       @driver.manage.timeouts.implicit_wait = 0
     end
 
+    def quit
+      if @driver
+        @driver.quit
+      end
+    end
+
     def method_missing(method_name, *args, &block)
+      if @driver.nil?
+        initialize_driver
+      end
       @driver.send(method_name, *args, &block)
     end
 

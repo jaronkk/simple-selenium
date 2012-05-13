@@ -1,11 +1,10 @@
 require "selenium/selenium_helper"
-require "ruby-debug"
 
 RSpec.configure do |config|
   config.include SeleniumHelper
 
   config.before(:all) do
-    selenium_start
+    selenium_initialize
   end
 
   config.after(:all) do
